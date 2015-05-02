@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://www.purebasic.com/namespace" version="1.0" creator="PureBasic 5.31 (Windows - x86)">
+  <section name="config">
+    <options closefiles="1" openmode="0" name="XO"/>
+  </section>
+  <section name="data">
+    <explorer view="S:\misc\work\ntest3\" pattern="0"/>
+    <log show="1"/>
+    <lastopen date="2015-05-02 15:22" user="deseven" host="DE7PC"/>
+  </section>
+  <section name="files">
+    <file name="const.pb">
+      <config load="0" scan="1" panel="1" warn="1" lastopen="1" panelstate="+"/>
+      <fingerprint md5="f6a8104d4a9e0eed4ba146f949273efc"/>
+    </file>
+    <file name="main.pb">
+      <config load="0" scan="1" panel="1" warn="1" lastopen="1" panelstate="+"/>
+      <fingerprint md5="2d553753ce50b630931bea50cc650371"/>
+    </file>
+    <file name="proc.pb">
+      <config load="0" scan="1" panel="1" warn="1" lastopen="1" panelstate="+"/>
+      <fingerprint md5="439f1ec9371362ca325a38cb6c9226d7"/>
+    </file>
+  </section>
+  <section name="targets">
+    <target name="Default Target" enabled="1" default="1">
+      <inputfile value="main.pb"/>
+      <outputfile value="xo.exe"/>
+      <executable value="xo.exe"/>
+      <options unicode="1" xpskin="1" debug="1"/>
+      <temporaryexe value="source"/>
+      <buildcount enable="1" value="2"/>
+    </target>
+  </section>
+</project>
