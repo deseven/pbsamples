@@ -1,26 +1,25 @@
-﻿#myName = "Canvas PC"
+﻿; simple example of how to create desktop-like shortcuts
+; by using CanvasGadget
+
+#myName = "Canvas PC"
 
 Enumeration
   #wnd
   #canvas
   #pc
   #work
-  #workSel
   #text
-  #textSel
-  #drink
-  #drinkSel
+  #fun
+  #mask
 EndEnumeration
 
 UsePNGImageDecoder()
 
 CatchImage(#pc,?imgPC)
 CatchImage(#work,?imgWork)
-CatchImage(#workSel,?imgWorkSel)
 CatchImage(#text,?imgText)
-CatchImage(#textSel,?imgTextSel)
-CatchImage(#drink,?imgDrink)
-CatchImage(#drinkSel,?imgDrinkSel)
+CatchImage(#fun,?imgFun)
+CatchImage(#mask,?imgMask)
 
 OpenWindow(#wnd,#PB_Ignore,#PB_Ignore,800,600,#myName,#PB_Window_ScreenCentered|#PB_Window_SystemMenu)
 CanvasGadget(#canvas,0,0,800,600)
@@ -37,20 +36,15 @@ Procedure drawPC(sel.b = 0)
   Box(0,0,800,600,$ffffff)
   DrawingMode(#PB_2DDrawing_AlphaBlend)
   DrawAlphaImage(ImageID(#pc),0,0)
+  DrawAlphaImage(ImageID(#work),180,80)
+  DrawAlphaImage(ImageID(#text),280,80)
+  DrawAlphaImage(ImageID(#fun),380,80)
   If sel = #work
-    DrawAlphaImage(ImageID(#workSel),180,80)
-  Else
-    DrawAlphaImage(ImageID(#work),180,80)
-  EndIf
-  If sel = #text
-    DrawAlphaImage(ImageID(#textSel),280,80)
-  Else
-    DrawAlphaImage(ImageID(#text),280,80)
-  EndIf
-  If sel = #drink
-    DrawAlphaImage(ImageID(#drinkSel),380,80)
-  Else
-    DrawAlphaImage(ImageID(#drink),380,80)
+    DrawAlphaImage(ImageID(#mask),180,80)
+  ElseIf sel = #text
+    DrawAlphaImage(ImageID(#mask),280,80)
+  ElseIf sel = #fun
+    DrawAlphaImage(ImageID(#Mask),380,80)
   EndIf
   StopDrawing()
 EndProcedure
@@ -70,18 +64,18 @@ Repeat
       ElseIf isInRect(mX,mY,280,80,360,180)
         selection = #text
       ElseIf isInRect(mX,mY,380,80,460,180)
-        selection = #drink
+        selection = #fun
       Else
         selection = 0
       EndIf
     ElseIf EventType() = #PB_EventType_LeftDoubleClick
       Select selection
         Case #work
-          MessageRequester(#myName,"У вас нет работы, вы нищий бесполезный алкоголик.")
+          MessageRequester(#myName,"Action1")
         Case #text
-          MessageRequester(#myName,"Вы не умеете писать, зачем пытаться?")
-        Case #drink
-          MessageRequester(#myName,"Вы успешно нажрались, как обычно.")
+          MessageRequester(#myName,"Action2")
+        Case #fun
+          MessageRequester(#myName,"Action3")
       EndSelect
     EndIf
     drawPC(selection)
@@ -95,14 +89,10 @@ DataSection
   IncludeBinary "img/pc.png"
   imgWork:
   IncludeBinary "img/work.png"
-  imgWorkSel:
-  IncludeBinary "img/work_selected.png"
   imgText:
   IncludeBinary "img/text.png"
-  imgTextSel:
-  IncludeBinary "img/text_selected.png"
-  imgDrink:
-  IncludeBinary "img/drink.png"
-  imgDrinkSel:
-  IncludeBinary "img/drink_selected.png"
+  imgFun:
+  IncludeBinary "img/fun.png"
+  imgMask:
+  IncludeBinary "img/mask.png"
 EndDataSection

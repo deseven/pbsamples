@@ -1,4 +1,7 @@
-﻿#myName = "Canvas PC proc"
+﻿; trying to lower the executable size by using bmp icons
+; and by generating the notebook by procedure
+
+#myName = "Canvas PC proc"
 
 Enumeration
   #wnd
@@ -6,14 +9,13 @@ Enumeration
   #pc
   #work
   #text
-  #drink
+  #fun
   #font
-  #mask
 EndEnumeration
 
 CatchImage(#work,?imgWork)
 CatchImage(#text,?imgText)
-CatchImage(#drink,?imgDrink)
+CatchImage(#fun,?imgFun)
 
 OpenWindow(#wnd,#PB_Ignore,#PB_Ignore,800,600,#myName,#PB_Window_ScreenCentered|#PB_Window_SystemMenu)
 CanvasGadget(#canvas,0,0,800,600)
@@ -27,6 +29,9 @@ Procedure isInRect(x.w,y.w,x1.w,y1.w,x2.w,y2.w)
 EndProcedure
 
 Procedure genTextures(mp.b = 1)
+  ; we'll use the multiplier to resize the image later
+  ; because the internal PB 2d-drawing can't do AA
+  
   CreateImage(#pc,800*mp,600*mp)
   StartDrawing(ImageOutput(#pc))
   BackColor($444444)
@@ -52,8 +57,9 @@ Procedure genTextures(mp.b = 1)
   DrawingMode(#PB_2DDrawing_Default)
   BackColor($666666)
   FrontColor($cccccc)
-  LinearGradient(400*mp,0,400*mp,300*mp)
   RoundBox(160*mp,30*mp,480*mp,280*mp,10*mp,10*mp)
+  
+  ; bottom frame
   FrontColor($333333)
   RoundBox(100*mp,510*mp,601*mp,30*mp,8*mp,8*mp)
   
@@ -99,18 +105,18 @@ Procedure drawPC(sel.b = 0)
   DrawingMode(#PB_2DDrawing_Default)
   DrawingFont(FontID(#font))
   DrawImage(ImageID(#work),180,50)
-  tW.w = TextWidth("Работа")
-  DrawText(180+(40-tW/2),130,"Работа",$000000,$cccccc)
+  tW.w = TextWidth("Work")
+  DrawText(180+(40-tW/2),130,"Work",$000000,$cccccc)
   
   ; text
   DrawImage(ImageID(#text),280,50)
-  tW.w = TextWidth("Текст")
-  DrawText(280+(40-tW/2),130,"Текст",$000000,$cccccc)
+  tW.w = TextWidth("Text")
+  DrawText(280+(40-tW/2),130,"Text",$000000,$cccccc)
   
   ; drink
-  DrawImage(ImageID(#drink),380,50)
-  tW.w = TextWidth("Бухать")
-  DrawText(380+(40-tW/2),130,"Бухать",$000000,$cccccc)
+  DrawImage(ImageID(#fun),380,50)
+  tW.w = TextWidth("Fun")
+  DrawText(380+(40-tW/2),130,"Fun",$000000,$cccccc)
   
   DrawingMode(#PB_2DDrawing_AlphaBlend)
   FrontColor($99994444)
@@ -120,7 +126,7 @@ Procedure drawPC(sel.b = 0)
   If sel = #text
     RoundBox(280,50,80,100,10,10)
   EndIf
-  If sel = #drink
+  If sel = #fun
     RoundBox(380,50,80,100,10,10)
   EndIf
   
@@ -143,18 +149,18 @@ Repeat
       ElseIf isInRect(mX,mY,280,50,360,150)
         selection = #text
       ElseIf isInRect(mX,mY,380,50,460,150)
-        selection = #drink
+        selection = #fun
       Else
         selection = 0
       EndIf
     ElseIf EventType() = #PB_EventType_LeftDoubleClick
       Select selection
         Case #work
-          MessageRequester(#myName,"У вас нет работы, вы нищий бесполезный алкоголик.")
+          MessageRequester(#myName,"Action1")
         Case #text
-          MessageRequester(#myName,"Вы не умеете писать, зачем пытаться?")
-        Case #drink
-          MessageRequester(#myName,"Вы успешно нажрались, как обычно.")
+          MessageRequester(#myName,"Action2")
+        Case #fun
+          MessageRequester(#myName,"Action3")
       EndSelect
     EndIf
     drawPC(selection)
@@ -168,6 +174,6 @@ DataSection
   IncludeBinary "img/work.bmp"
   imgText:
   IncludeBinary "img/text.bmp"
-  imgDrink:
-  IncludeBinary "img/drink.bmp"
+  imgFun:
+  IncludeBinary "img/fun.bmp"
 EndDataSection
