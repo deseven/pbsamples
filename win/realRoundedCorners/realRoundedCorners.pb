@@ -15,7 +15,7 @@ Global wndID = WindowID(wnd)
 ; adding the WS_EX_LAYERED flag to the window
 SetWindowLong_(wndID,#GWL_EXSTYLE,GetWindowLong_(wndID,#GWL_EXSTYLE)|#WS_EX_LAYERED)
 
-; paiting background with an alpha-channel
+; painting background with an alpha-channel
 DC.l = CreateCompatibleDC_(#Null)
 imgObject.l = SelectObject_(DC,BgImgID)
 wndSize.Size
@@ -39,25 +39,23 @@ StickyWindow(wnd2,1)
 ; adding callback to move the child window with the parent
 Procedure wndCallback(hWnd, uMsg, wParam, lParam)
    Protected Result = #PB_ProcessPureBasicEvents       
-
    Select uMsg               
      Case #WM_SIZE, #WM_MOVE, #WM_PAINT
        ResizeWindow(wnd2,WindowX(wnd)+30,WindowY(wnd)+30,#PB_Ignore,#PB_Ignore)
+     Case #WM_LBUTTONDOWN
+       SendMessage_(wndID,#WM_NCLBUTTONDOWN,#HTCAPTION,0)
    EndSelect
-
    ProcedureReturn Result
 EndProcedure
 SetWindowCallback(@wndCallback(),wnd)
 
 HideWindow(wnd,0)
 
-ButtonGadget(1,0,0,100,20,"test")
+ButtonGadget(1,0,0,100,20,"exit")
 
 Repeat
   ev = WaitWindowEvent(100)
-  
-  If ev = #WM_LBUTTONDOWN
-    SendMessage_(wndID,#WM_NCLBUTTONDOWN,#HTCAPTION,0)
+  If EventGadget() = 1 And EventType() = #PB_EventType_LeftClick
+    ev = #PB_Event_CloseWindow
   EndIf
-  
 Until ev = #PB_Event_CloseWindow

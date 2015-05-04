@@ -52,7 +52,7 @@ Procedure DoPhysics()
         
         ; if distance to the cursor is smaller by y-axis
         If Pow(mX-ParticleCoordsX(i),2) >= Pow(mY-ParticleCoordsY(i),2)
-          ; если курсор справа
+          ; right
           If mX > ParticleCoordsX(i)
             ; +2 or -2 pixels based on the force type
             If PointerMode = 0 : ParticleCoordsX(i)+2 : Else : ParticleCoordsX(i)-2 : EndIf
