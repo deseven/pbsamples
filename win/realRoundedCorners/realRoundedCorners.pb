@@ -37,15 +37,14 @@ SetWindowColor(wnd2,$ffffff)
 StickyWindow(wnd2,1)
 
 ; adding callback to move the child window with the parent
-Procedure wndCallback(hWnd, uMsg, wParam, lParam)
-   Protected Result = #PB_ProcessPureBasicEvents       
+Procedure wndCallback(hWnd,uMsg,wParam,lParam)     
    Select uMsg               
      Case #WM_SIZE, #WM_MOVE, #WM_PAINT
        ResizeWindow(wnd2,WindowX(wnd)+30,WindowY(wnd)+30,#PB_Ignore,#PB_Ignore)
      Case #WM_LBUTTONDOWN
        SendMessage_(wndID,#WM_NCLBUTTONDOWN,#HTCAPTION,0)
    EndSelect
-   ProcedureReturn Result
+   ProcedureReturn #PB_ProcessPureBasicEvents 
 EndProcedure
 SetWindowCallback(@wndCallback(),wnd)
 
