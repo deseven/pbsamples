@@ -33,7 +33,7 @@ Procedure isInRect(x.w,y.w,x1.w,y1.w,x2.w,y2.w)
   ProcedureReturn #False
 EndProcedure
 
-Procedure addObject(type.b,x.w,y.w,w.w,h.w,r.a,g.a,b.a,a.a = 0)
+Procedure addObject(type.b,x.w,y.w,w.w,h.w,r.a,g.a,b.a,a.a = 255)
   Shared objects()
   AddElement(objects())
   objects()\type = type
@@ -66,11 +66,11 @@ EndProcedure
 OpenWindow(#wnd,#PB_Ignore,#PB_Ignore,800,600,"canvasElements",#PB_Window_ScreenCentered|#PB_Window_SystemMenu)
 CanvasGadget(#canvas,0,0,800,600)
 
-addObject(#box,10,10,100,40,200,0,0,150)
-addObject(#circle,200,50,30,30,0,200,0,150)
-addObject(#box,300,400,50,80,0,0,200,150)
+For i = 0 To 100
+  addObject(Random(1),Random(800),Random(600),Random(100,10),Random(100,10),Random(255,50),Random(255,50),Random(255,50),150)
+Next
 
-selectedObject.b = -1
+selectedObject.w = -1
 drawObjects()
 
 Repeat
