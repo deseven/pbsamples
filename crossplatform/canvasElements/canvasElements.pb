@@ -110,7 +110,6 @@ Procedure drawObjects()
 EndProcedure
 
 OpenWindow(#wnd,#PB_Ignore,#PB_Ignore,800,600,"canvasElements",#PB_Window_ScreenCentered|#PB_Window_SystemMenu)
-CanvasGadget(#canvas,0,0,800,600)
 CreateToolBar(#toolbar,WindowID(#wnd))
 createButtons()
 ToolBarImageButton(#add,ImageID(#add),#PB_ToolBar_Toggle)
@@ -118,6 +117,7 @@ ToolBarImageButton(#delete,ImageID(#delete),#PB_ToolBar_Toggle)
 ToolBarImageButton(#move,ImageID(#move),#PB_ToolBar_Toggle)
 toggleButton(#add)
 mode.b = #add
+CanvasGadget(#canvas,0,ToolBarHeight(#toolbar),800,600-ToolBarHeight(#toolbar))
 
 For i = 0 To 5
   addObject(Random(1),Random(800),Random(600),Random(100,10),Random(100,10),Random(255,50),Random(255,50),Random(255,50),150)
