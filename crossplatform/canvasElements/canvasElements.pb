@@ -17,6 +17,7 @@ Enumeration type
   #circle
   #ellipse
   #box
+  #roundbox
 EndEnumeration
 
 Enumeration drawMode
@@ -97,7 +98,7 @@ Procedure addObject(type.b,x.w,y.w,w.w,h.w,r.a,g.a,b.a,a.a = 255)
 EndProcedure
 
 Macro addRandomObject()
-  addObject(Random(2),Random(#width-50,50),Random(#height-ToolBarHeight(#toolbar)-50,50),Random(150,50),Random(150,50),Random(255,50),Random(255,50),Random(255,50),150)
+  addObject(Random(3),Random(#width-50,50),Random(#height-ToolBarHeight(#toolbar)-50,50),Random(150,50),Random(150,50),Random(255,50),Random(255,50),Random(255,50),150)
 EndMacro
 
 Procedure Quadrilateral(x1,y1,x2,y2,x3,y3,x4,y4,color.l,fill.b = #True)
@@ -122,6 +123,8 @@ Procedure drawObject(*object.object,drawMode.b = #normal)
       Ellipse(*object\x+*object\w/2,*object\y+*object\h/2,*object\w/2,*object\h/2,color)
     Case #box
       Box(*object\x,*object\y,*object\w,*object\h,color)
+    Case #roundbox
+      RoundBox(*object\x,*object\y,*object\w,*object\h,*object\h/10,*object\h/10,color)
     EndSelect
 EndProcedure
 
