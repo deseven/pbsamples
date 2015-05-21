@@ -1,4 +1,4 @@
-﻿#width = 800
+#width = 800
 #height = 600
 
 Enumeration
@@ -36,7 +36,7 @@ Structure color
   a.a
 EndStructure
 
-Structure object
+Structure obj
   type.b
   x.w
   y.w
@@ -45,7 +45,7 @@ Structure object
   color.color
 EndStructure
 
-NewList objects.object()
+NewList all.obj()
 
 Procedure isInRect(x.w,y.w,x1.w,y1.w,x2.w,y2.w)
   If x >= x1 And x <= x2 And y >= y1 And y <= y2
@@ -84,17 +84,17 @@ Procedure toggleButton(new.i,old.i = -1)
 EndProcedure
 
 Procedure addObject(type.b,x.w,y.w,w.w,h.w,r.a,g.a,b.a,a.a = 255)
-  Shared objects()
-  AddElement(objects())
-  objects()\type = type
-  objects()\x = x
-  objects()\y = y
-  objects()\w = w
-  objects()\h = h
-  objects()\color\r = r
-  objects()\color\g = g
-  objects()\color\b = b
-  objects()\color\a = a
+  Shared all()
+  AddElement(all())
+  all()\type = type
+  all()\x = x
+  all()\y = y
+  all()\w = w
+  all()\h = h
+  all()\color\r = r
+  all()\color\g = g
+  all()\color\b = b
+  all()\color\a = a
 EndProcedure
 
 Macro addRandomObject()
@@ -108,35 +108,37 @@ Procedure Quadrilateral(x1,y1,x2,y2,x3,y3,x4,y4,color.l,fill.b = #True)
   LineXY(x4,y4,x1,y1,color)
 EndProcedure
 
-Procedure drawObject(*object.object,drawMode.b = #normal)
+Procedure drawObject(*obj.obj,drawMode.b = #normal)
   Protected color.l = RGBA(0,0,0,255)
   If drawMode = #normal
     DrawingMode(#PB_2DDrawing_AlphaBlend)
-    color.l = RGBA(*object\color\r,*object\color\g,*object\color\b,*object\color\a)
+    color.l = RGBA(*obj\color\r,*obj\color\g,*obj\color\b,*obj\color\a)
   Else
     DrawingMode(#PB_2DDrawing_Outlined)
   EndIf
-  Select *object\type
+  Select *obj\type
     Case #circle
-      Circle(*object\x+*object\w/2,*object\y+*object\h/2,*object\w/2,color)
+      Circle(*obj\x+*obj\w/2,*obj\y+*obj\h/2,*obj\w/2,color)
     Case #ellipse
-      Ellipse(*object\x+*object\w/2,*object\y+*object\h/2,*object\w/2,*object\h/2,color)
+      Ellipse(*obj\x+*obj\w/2,*obj\y+*obj\h/2,*obj\w/2,*obj\h/2,color)
     Case #box
-      Box(*object\x,*object\y,*object\w,*object\h,color)
+      Box(*obj\x,*obj\y,*obj\w,*obj\h,color)
     Case #roundbox
-      RoundBox(*object\x,*object\y,*object\w,*object\h,*object\h/10,*object\h/10,color)
+      RoundBox(*obj\x,*obj\y,*obj\w,*obj\h,*obj\h/10,*obj\h/10,color)
+    Case #quadrilateral
+      ;comming soon
     EndSelect
 EndProcedure
 
 Procedure drawObjects()
-  Shared objects(),selectedObject.l
+  Shared all(),selectedObject.l
   StartDrawing(CanvasOutput(#canvas))
   DrawingMode(#PB_2DDrawing_AlphaBlend)
   Box(0,0,800,#height-ToolBarHeight(#toolbar),$ffffffff)
-  ForEach objects()
-    drawObject(@objects())
-    If ListIndex(objects()) = selectedObject
-      drawObject(@objects(),#PB_2DDrawing_Outlined)
+  ForEach all()
+    drawObject(@all())
+    If ListIndex(all()) = selectedObject
+      drawObject(@all(),#PB_2DDrawing_Outlined)
     EndIf
   Next
   StopDrawing()
@@ -157,29 +159,29 @@ Next
 drawObjects()
 
 Procedure canvasLMBD()
-  Shared buttonPressed.b,mode.b,selectedObject.l,offsetX,offsetY,objects()
+  Shared buttonPressed.b,mode.b,selectedObject.l,offsetX,offsetY,all()
   mX.w = GetGadgetAttribute(#canvas,#PB_Canvas_MouseX)
   mY.w = GetGadgetAttribute(#canvas,#PB_Canvas_MouseY)
   If Not buttonPressed
     buttonPressed = #True
     If mode = #add
       addRandomObject()
-      SelectElement(objects(),ListSize(objects())-1)
-      objects()\x = mX - objects()\w/2
-      objects()\y = mY - objects()\h/2
-      Debug "added element [" + Str(objects()\type) + "," + Str(objects()\x) + "," + Str(objects()\y) + "," + Str(objects()\w) + "," + Str(objects()\h) + "]"
+      SelectElement(all(),ListSize(all())-1)
+      all()\x = mX - all()\w/2
+      all()\y = mY - all()\h/2
+      Debug "added element [" + Str(all()\type) + "," + Str(all()\x) + "," + Str(all()\y) + "," + Str(all()\w) + "," + Str(all()\h) + "]"
     Else
-      For i = ListSize(objects())-1 To 0 Step -1
-        SelectElement(objects(),i)
-        If isInRect(mX,mY,objects()\x,objects()\y,objects()\x+objects()\w,objects()\y+objects()\h)
-          Debug "touched element [" + Str(objects()\type) + "," + Str(objects()\x) + "," + Str(objects()\y) + "," + Str(objects()\w) + "," + Str(objects()\h) + "]"
-          offsetX = mX - objects()\x
-          offsetY = mY - objects()\y
-          MoveElement(objects(),#PB_List_Last)
-          selectedObject = ListSize(objects())-1
+      For i = ListSize(all())-1 To 0 Step -1
+        SelectElement(all(),i)
+        If isInRect(mX,mY,all()\x,all()\y,all()\x+all()\w,all()\y+all()\h)
+          Debug "touched element [" + Str(all()\type) + "," + Str(all()\x) + "," + Str(all()\y) + "," + Str(all()\w) + "," + Str(all()\h) + "]"
+          offsetX = mX - all()\x
+          offsetY = mY - all()\y
+          MoveElement(all(),#PB_List_Last)
+          selectedObject = ListSize(all())-1
           If mode = #delete
-            Debug "deleted element [" + Str(objects()\type) + "," + Str(objects()\x) + "," + Str(objects()\y) + "," + Str(objects()\w) + "," + Str(objects()\h) + "]"
-            DeleteElement(objects())
+            Debug "deleted element [" + Str(all()\type) + "," + Str(all()\x) + "," + Str(all()\y) + "," + Str(all()\w) + "," + Str(all()\h) + "]"
+            DeleteElement(all())
           EndIf
           Break
         EndIf
@@ -190,13 +192,13 @@ Procedure canvasLMBD()
 EndProcedure
 
 Procedure canvasMove()
-  Shared mode.b,buttonPressed.b,selectedObject.l,offsetX,offsetY,objects()
+  Shared mode.b,buttonPressed.b,selectedObject.l,offsetX,offsetY,all()
   mX.w = GetGadgetAttribute(#canvas,#PB_Canvas_MouseX)
   mY.w = GetGadgetAttribute(#canvas,#PB_Canvas_MouseY)
   If buttonPressed And selectedObject > -1 And mode = #move
-    SelectElement(objects(),selectedObject)
-    objects()\x = mX - offsetX
-    objects()\y = mY - offsetY
+    SelectElement(all(),selectedObject)
+    all()\x = mX - offsetX
+    all()\y = mY - offsetY
     drawObjects()
   EndIf
 EndProcedure
