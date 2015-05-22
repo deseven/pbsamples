@@ -11,6 +11,7 @@ Enumeration buttons
   #add
   #delete
   #move
+  #above
 EndEnumeration
 
 Enumeration type
@@ -18,6 +19,7 @@ Enumeration type
   #ellipse
   #box
   #roundbox
+  #quadrilateral
 EndEnumeration
 
 Enumeration drawMode
@@ -76,14 +78,15 @@ Procedure createButtons()
   Box(2,4,1,8,$cc0000)
   Box(13,4,1,8,$cc0000)
   StopDrawing()
+  CreateImage(#above,16,16)
+  StartDrawing(ImageOutput(#above))
+  Box(0,0,16,16,$ffffff)
+  Box(6,2,8,8,$cc0000)
+  Box(2,6,8,8,$00cc00)
+  StopDrawing()
 EndProcedure
 
-Procedure toggleButton(new.i,old.i = -1)
-  If GetToolBarButtonState(#toolbar,old) : SetToolBarButtonState(#toolbar,old,#False) : EndIf
-  If Not GetToolBarButtonState(#toolbar,new) : SetToolBarButtonState(#toolbar,new,#True) : EndIf
-EndProcedure
-
-Procedure addObject(type.b,x.w,y.w,w.w,h.w,r.a,g.a,b.a,a.a = 255)
+Procedure addObj(type.b,x.w,y.w,w.w,h.w,r.a,g.a,b.a,a.a = 255)
   Shared all()
   AddElement(all())
   all()\type = type
@@ -97,8 +100,8 @@ Procedure addObject(type.b,x.w,y.w,w.w,h.w,r.a,g.a,b.a,a.a = 255)
   all()\color\a = a
 EndProcedure
 
-Macro addRandomObject()
-  addObject(Random(3),Random(#width-50,50),Random(#height-ToolBarHeight(#toolbar)-50,50),Random(150,50),Random(150,50),Random(255,50),Random(255,50),Random(255,50),150)
+Macro addRandomObj()
+  addObj(Random(3),Random(#width-50,50),Random(#height-ToolBarHeight(#toolbar)-50,50),Random(150,50),Random(150,50),Random(255,50),Random(255,50),Random(255,50),150)
 EndMacro
 
 Procedure Quadrilateral(x1,y1,x2,y2,x3,y3,x4,y4,color.l,fill.b = #True)
@@ -108,13 +111,15 @@ Procedure Quadrilateral(x1,y1,x2,y2,x3,y3,x4,y4,color.l,fill.b = #True)
   LineXY(x4,y4,x1,y1,color)
 EndProcedure
 
-Procedure drawObject(*obj.obj,drawMode.b = #normal)
+Procedure drawObj(*obj.obj,drawMode.b = #normal)
   Protected color.l = RGBA(0,0,0,255)
   If drawMode = #normal
     DrawingMode(#PB_2DDrawing_AlphaBlend)
     color.l = RGBA(*obj\color\r,*obj\color\g,*obj\color\b,*obj\color\a)
   Else
-    DrawingMode(#PB_2DDrawing_Outlined)
+    If mode = #move ;troubles
+      DrawingMode(#PB_2DDrawing_Outlined)
+    EndIf
   EndIf
   Select *obj\type
     Case #circle
@@ -130,15 +135,15 @@ Procedure drawObject(*obj.obj,drawMode.b = #normal)
     EndSelect
 EndProcedure
 
-Procedure drawObjects()
+Procedure drawAll()
   Shared all(),selectedObject.l
   StartDrawing(CanvasOutput(#canvas))
   DrawingMode(#PB_2DDrawing_AlphaBlend)
   Box(0,0,800,#height-ToolBarHeight(#toolbar),$ffffffff)
   ForEach all()
-    drawObject(@all())
+    drawObj(@all())
     If ListIndex(all()) = selectedObject
-      drawObject(@all(),#PB_2DDrawing_Outlined)
+      drawObj(@all(),#PB_2DDrawing_Outlined)
     EndIf
   Next
   StopDrawing()
@@ -147,16 +152,18 @@ EndProcedure
 OpenWindow(#wnd,#PB_Ignore,#PB_Ignore,#width,#height,"canvasElements",#PB_Window_ScreenCentered|#PB_Window_SystemMenu)
 CreateToolBar(#toolbar,WindowID(#wnd))
 createButtons()
-ToolBarImageButton(#add,ImageID(#add),#PB_ToolBar_Toggle)
-ToolBarImageButton(#delete,ImageID(#delete),#PB_ToolBar_Toggle)
-ToolBarImageButton(#move,ImageID(#move),#PB_ToolBar_Toggle)
-toggleButton(#add)
+ToolBarImageButton(#add,ImageID(#add))
+ToolBarImageButton(#delete,ImageID(#delete))
+ToolBarImageButton(#move,ImageID(#move))
+ToolBarSeparator()
+ToolBarImageButton(#above,ImageID(#above))
+SetToolBarButtonState(#toolbar,#add,1)
 CanvasGadget(#canvas,0,ToolBarHeight(#toolbar),#width,#height-ToolBarHeight(#toolbar))
 
 For i = 0 To 10
-  addRandomObject()
+  addRandomObj()
 Next
-drawObjects()
+drawAll()
 
 Procedure canvasLMBD()
   Shared buttonPressed.b,mode.b,selectedObject.l,offsetX,offsetY,all()
@@ -165,7 +172,7 @@ Procedure canvasLMBD()
   If Not buttonPressed
     buttonPressed = #True
     If mode = #add
-      addRandomObject()
+      addRandomObj()
       SelectElement(all(),ListSize(all())-1)
       all()\x = mX - all()\w/2
       all()\y = mY - all()\h/2
@@ -177,8 +184,12 @@ Procedure canvasLMBD()
           Debug "touched element [" + Str(all()\type) + "," + Str(all()\x) + "," + Str(all()\y) + "," + Str(all()\w) + "," + Str(all()\h) + "]"
           offsetX = mX - all()\x
           offsetY = mY - all()\y
-          MoveElement(all(),#PB_List_Last)
-          selectedObject = ListSize(all())-1
+          If GetToolBarButtonState(#toolbar,#above) = 1
+            MoveElement(all(),#PB_List_Last)
+            selectedObject = ListSize(all())-1
+          Else
+            selectedObject = i
+          EndIf
           If mode = #delete
             Debug "deleted element [" + Str(all()\type) + "," + Str(all()\x) + "," + Str(all()\y) + "," + Str(all()\w) + "," + Str(all()\h) + "]"
             DeleteElement(all())
@@ -187,7 +198,7 @@ Procedure canvasLMBD()
         EndIf
       Next
     EndIf
-    drawObjects()
+    drawAll()
   EndIf
 EndProcedure
 
@@ -199,7 +210,7 @@ Procedure canvasMove()
     SelectElement(all(),selectedObject)
     all()\x = mX - offsetX
     all()\y = mY - offsetY
-    drawObjects()
+    drawAll()
   EndIf
 EndProcedure
 
@@ -208,7 +219,7 @@ Procedure canvasLMBU()
   If buttonPressed
     buttonPressed = #False
     selectedObject = -1
-    drawObjects()
+    drawAll()
   EndIf
 EndProcedure
 
@@ -220,12 +231,24 @@ Repeat
   ev = WaitWindowEvent(300)
   If ev = #PB_Event_Menu
     Select EventMenu()
-      Case #add
-        toggleButton(#add,mode) : mode = #add
-      Case #delete
-        toggleButton(#delete,mode) : mode = #delete
-      Case #move
-        toggleButton(#move,mode) : mode = #move
+      Case #add, #delete, #move
+        EventGadget = EventGadget()
+        For Gadget = #add To #move
+          If Gadget = EventGadget
+            SetToolBarButtonState(#toolbar,Gadget,1)
+          Else
+            SetToolBarButtonState(#toolbar,Gadget,0) ; unset the state of all other gadgets
+          EndIf
+        Next Gadget          
+        mode = EventGadget 
+
+      Case #above
+        If GetToolBarButtonState(#toolbar,#above)
+          SetToolBarButtonState(#toolbar, #above, 0)
+        Else
+          SetToolBarButtonState(#toolbar, #above, 1)
+        EndIf
+        
     EndSelect
   EndIf
 Until ev = #PB_Event_CloseWindow
