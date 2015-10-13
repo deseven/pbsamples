@@ -123,7 +123,7 @@ Procedure drawObj(*obj.obj,drawMode.b = #normal)
     DrawingMode(#PB_2DDrawing_AlphaBlend)
     color.l = RGBA(*obj\color\r,*obj\color\g,*obj\color\b,*obj\color\a)
   Else
-    DrawingMode(drawMode) ; если закаментить эту строку - перетаскиваемые объекты становятся черными целиком
+    DrawingMode(drawMode)
   EndIf
   Select *obj\type
     Case #circle
@@ -147,7 +147,7 @@ Procedure drawAll()
   ForEach all()
     drawObj(@all())
     If ListIndex(all()) = selectedObject
-      drawObj(@all(),#PB_2DDrawing_Outlined) ;эта строчка отвечает за обводку объектов
+      drawObj(@all(),#PB_2DDrawing_Outlined)
     EndIf
   Next
   StopDrawing()
@@ -196,7 +196,7 @@ Procedure canvasLMBD()
           If mode = #delete
             Debug "deleted element [" + Str(all()\type) + "," + Str(all()\x) + "," + Str(all()\y) + "," + Str(all()\w) + "," + Str(all()\h) + "]"
             DeleteElement(all())
-            selectedObject = -1 ;без этой строки при отжатом #above и удалении выделяется черным последний объект списка
+            selectedObject = -1
           EndIf
           Break
         EndIf

@@ -33,12 +33,14 @@ Procedure arrangeButtons()
   EndIf
 EndProcedure
 
-Procedure wndCallback(hWnd,uMsg,wParam,lParam)      
-  If uMsg = #WM_SIZE
-    arrangeButtons()
-  EndIf
-  ProcedureReturn #PB_ProcessPureBasicEvents
-EndProcedure
+CompilerIf #PB_Compiler_OS = #PB_OS_Windows
+  Procedure wndCallback(hWnd,uMsg,wParam,lParam)      
+    If uMsg = #WM_SIZE
+      arrangeButtons()
+    EndIf
+    ProcedureReturn #PB_ProcessPureBasicEvents
+  EndProcedure
+CompilerEndIf
 
 OpenWindow(0,#PB_Ignore,#PB_Ignore,550,410,"arrangeButtons",#PB_Window_SystemMenu|#PB_Window_SizeGadget|#PB_Window_ScreenCentered|#PB_Window_MaximizeGadget)
 CompilerIf #PB_Compiler_OS = #PB_OS_Windows : SetWindowCallback(@wndCallback(),wnd) : CompilerEndIf
