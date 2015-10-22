@@ -15,7 +15,7 @@ If curl
   curl_easy_setopt(curl,#CURLOPT_POSTFIELDS,@post)
   curl_easy_setopt(curl,#CURLOPT_USERAGENT,@agent)
   curl_easy_setopt(curl,#CURLOPT_TIMEOUT,30)
-  *header = curl_slist_append(*Headers,header)
+  *header = curl_slist_append(0,header)
   curl_easy_setopt(curl,#CURLOPT_HTTPHEADER,*header)
   curl_easy_setopt(curl,#CURLOPT_WRITEFUNCTION,@curlWriteData())
   res = curl_easy_perform(curl)
@@ -30,7 +30,3 @@ If curl
 Else
   Debug "can't init curl!"
 EndIf
-; IDE Options = PureBasic 5.40 LTS Beta 5 (Windows - x86)
-; EnableUnicode
-; EnableXP
-; EnableBuildCount = 0
