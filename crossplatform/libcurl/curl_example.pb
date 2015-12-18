@@ -30,3 +30,6 @@ If curl
 Else
   Debug "can't init curl!"
 EndIf
+; IDE Options = PureBasic 5.40 LTS (Windows - x86)
+; EnableUnicode
+; EnableXP
