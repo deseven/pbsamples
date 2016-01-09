@@ -12,9 +12,10 @@ Else
 EndIf
 CocoaMessage(0,icon,"setTemplate:",#True)
 
-itemLength.CGFloat = 32
+itemLength.CGFloat = 64
 statusBar.i = CocoaMessage(0,0,"NSStatusBar systemStatusBar")
 statusItem.i = CocoaMessage(0,CocoaMessage(0,statusBar,"statusItemWithLength:",-2),"retain")
+CocoaMessage(0,statusItem,"setTitle:",CocoaMessage(0,0,"NSString stringWithString:$",@"test"))
 CocoaMessage(0,statusItem,"setHighlightMode:",#True)
 CocoaMessage(0,statusItem,"setLength:@",@itemLength)
 CocoaMessage(0,statusItem,"setImage:",icon)
@@ -26,3 +27,6 @@ Repeat
     ev = #PB_Event_CloseWindow
   EndIf
 Until ev = #PB_Event_CloseWindow
+; IDE Options = PureBasic 5.41 LTS (MacOS X - x64)
+; EnableUnicode
+; EnableXP

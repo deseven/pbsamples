@@ -48,6 +48,7 @@ CompilerSelect #PB_Compiler_OS
     StopDrawing()
   CompilerCase #PB_OS_MacOS
     ; using cocoa calls to set the background and other params
+    CocoaMessage(0,WindowID(0),"setOpaque:",#NO)
     CocoaMessage(0,WindowID(0),"setBackgroundColor:",CocoaMessage(0,0,"NSColor colorWithPatternImage:",ImageID(0)))
     CocoaMessage(0,WindowID(0),"setMovableByWindowBackground:",#NO)
     CocoaMessage(0,WindowID(0),"setHasShadow:",#NO)
