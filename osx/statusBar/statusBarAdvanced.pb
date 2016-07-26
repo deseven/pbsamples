@@ -1,7 +1,18 @@
 ﻿; in this example we're creating a complete app with status bar icon and the ability to turn it off or on
 
+; if you'll turn off the status bar icon and close the main window
+; you'll still be able to access it by running the same .app again
+
 ; compile it into .app bundle,
+;
+; edit the Info.plist like that:
+; <key>LSUIElement</key>
+;	<true/>
+;
 ; run as a regular app
+
+#NSWindowButtonMinimize = 1
+#NSWindowButtonMaximize = 2
 
 EnableExplicit
 
@@ -17,10 +28,11 @@ CocoaMessage(0,ImageID(0),"setTemplate:",#True)
 ; due to somehow strange PB behavior in managing windows we will use cocoa methods to hide or show our app
 Define app.i = CocoaMessage(0,0,"NSApplication sharedApplication")
 
-OpenWindow(0,#PB_Ignore,#PB_Ignore,170,40,"Advanced status bar example",#PB_Window_SystemMenu|#PB_Window_ScreenCentered)
+OpenWindow(0,#PB_Ignore,#PB_Ignore,170,40,"statusBar",#PB_Window_SystemMenu|#PB_Window_ScreenCentered)
 StickyWindow(0,#True)
 CheckBoxGadget(0,10,10,150,20,"enable status bar icon")
-SetGadgetState(0,#PB_Checkbox_Checked)
+CocoaMessage(0,CocoaMessage(0,WindowID(0),"standardWindowButton:",#NSWindowButtonMinimize),"setHidden:",#YES)
+CocoaMessage(0,CocoaMessage(0,WindowID(0),"standardWindowButton:",#NSWindowButtonMaximize),"setHidden:",#YES)
 
 Procedure advancedStatusBar()
   Static statusBar.i,statusItem.i
@@ -50,8 +62,6 @@ Procedure advancedStatusBar()
   EndIf
 EndProcedure
 
-advancedStatusBar()
-
 Repeat
   Select WaitWindowEvent()
     Case #PB_Event_Gadget
@@ -65,7 +75,7 @@ Repeat
       EndSelect
     Case #PB_Event_CloseWindow
       If GetGadgetState(0) = #PB_Checkbox_Unchecked
-        MessageRequester("",~"You're closing the main window without active status bar icon.\n\nThe app will still run in background.\n\nYou'll be able to open the main window again if you have a valid .app by launching the same .app again.")
+        MessageRequester("",~"You're closing the main window without active status bar icon.\n\nThe app will still run in background.\n\nYou'll be able to open the main window if you have a valid .app by launching the same .app again.")
       EndIf
       CocoaMessage(0,app,"hide:")
   EndSelect
