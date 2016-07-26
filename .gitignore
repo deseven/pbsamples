@@ -1,2 +1,4 @@
 *.exe
+*.app
 Thumbs.db
+.DS_Store
