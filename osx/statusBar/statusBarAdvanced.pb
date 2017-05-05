@@ -49,7 +49,7 @@ Procedure advancedStatusBar()
     MenuItem(0,"Window")
     MenuBar()
     MenuItem(1,"Quit")
-    CocoaMessage(0,statusItem,"setHighlightMode:",@"YES")
+    CocoaMessage(0,statusItem,"setHighlightMode:",#YES)
     CocoaMessage(0,statusItem,"setLength:@",@itemLength)
     CocoaMessage(0,statusItem,"setImage:",ImageID(0))
     CocoaMessage(0,statusItem,"setMenu:",CocoaMessage(0,MenuID(0),"firstObject"))
@@ -80,7 +80,6 @@ Repeat
       CocoaMessage(0,app,"hide:")
   EndSelect
 ForEver
-
 ; IDE Options = PureBasic 5.42 LTS (MacOS X - x64)
 ; Folding = -
 ; EnableUnicode
